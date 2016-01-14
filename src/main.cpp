@@ -99,6 +99,8 @@ extern "C" {
     Condition ReportDoneCond;
 }
 
+thread_Settings* thread;
+
 // global variables only accessed within this file
 
 // Thread that received the SIGTERM or SIGINT signal
@@ -167,7 +169,7 @@ int main( int argc, char **argv ) {
     Settings_ParseCommandLine( argc, argv, ext_gSettings );
 
     // Synchronized reporter
-    {
+
     	// TODO : add a flag from arguments
     	thread_Settings *syncReporterThread = ext_gSettings;
     	// Create the settings structure for the reporter thread
@@ -175,9 +177,8 @@ int main( int argc, char **argv ) {
     	syncReporterThread->mTID = 0;
     	syncReporterThread->runNext = ext_gSettings;
     	syncReporterThread->mThreadMode = kMode_SyncronizedReporter;
-    	// Start all the threads that are ready to go
     	thread_start( syncReporterThread );
-    }
+
 
     // Check for either having specified client or server
     if ( ext_gSettings->mThreadMode == kMode_Client 
@@ -226,9 +227,10 @@ int main( int argc, char **argv ) {
 
             // Have the reporter launch the client or listener
             into->runNow = ext_gSettings;
-            
+
             // Start all the threads that are ready to go
             thread_start( into );
+            //thread_start( ext_gSettings );
         }
 #else
         // No need to make a reporter thread because we don't have threads

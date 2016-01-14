@@ -381,6 +381,7 @@ void ReportPacket( ReportHeader* agent, ReportStruct *packet ) {
         
         // Updating agentindex MUST be the last thing done
         agent->agentindex++;
+
 #ifndef HAVE_THREAD
         /*
          * Process the report in this thread
@@ -658,7 +659,6 @@ int reporter_process_report ( ReportHeader *reporthdr ) {
             free( temp );
         }
     }
-
     if ( (reporthdr->report.type & SETTINGS_REPORT) != 0 ) {
         reporthdr->report.type &= ~SETTINGS_REPORT;
         return reporter_print( &reporthdr->report, SETTINGS_REPORT, 1 );
@@ -1002,7 +1002,6 @@ int reporter_condprintstats( ReporterData *stats, MultiHeader *multireport, int 
 	}
 	stats->info.IPGsum = 1;
         stats->info.free = 1;
-
         reporter_print( stats, TRANSFER_REPORT, force );
         if ( isMultipleReport(stats) ) {
             reporter_handle_multiple_reports( multireport, &stats->info, force );

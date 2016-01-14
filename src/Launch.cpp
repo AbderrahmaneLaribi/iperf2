@@ -105,7 +105,7 @@ void synchronized_reporter_spawn( thread_Settings *thread) {
 
 	// Set the settings
 	syncReporter->SetSettings( thread );
-	// Set the settings
+	// Set the connected thread (server or client to report)
 	syncReporter->SetConnectedThread( thread->runNext );
 
 	// Run the reporter

@@ -56,9 +56,7 @@ void SynchronizedReporter::Run()
 		// Report
 		if (time.tv_nsec <= 1000 && report)
 		{
-			printf("sync reporting at : %lld.%.9ld\n",
-					(long long)(time.tv_sec),
-	        		time.tv_nsec);
+			//ReportPacket(time);
 			report = false;
 		}
 		else if(time.tv_nsec > 100000000)
@@ -74,9 +72,19 @@ ReportHeader* SynchronizedReporter::InitReport( struct thread_Settings *agent )
 	return NULL;
 }
 
-void SynchronizedReporter::ReportPacket( ReportHeader *agent, ReportStruct *packet )
+void SynchronizedReporter::ReportPacket(struct timespec &time)
 {
+	ReportHeader* ReportRoot = mConnectedThread->reporthdr;
 
+	printf("sync reporting at : %lld.%.9ld\n",
+			(long long)(time.tv_sec),
+    		time.tv_nsec);
+
+//	while(ReportRoot){
+	if (ReportRoot)
+		statistics_reports[ReportRoot->report.mode]( &ReportRoot->report.info );
+//		ReportRoot = ReportRoot->next;
+	//}
 }
 
 void SynchronizedReporter::CloseReport( ReportHeader *agent, ReportStruct *packet )
