@@ -121,7 +121,6 @@ void thread_start( struct thread_Settings* thread ) {
 
     // Make sure this object has not been started already
     if ( thread_equalid( thread->mTID, thread_zeroid() ) ) {
-
         // Check if we need to start another thread before this one
         if ( thread->runNow != NULL ) {
             thread_start( thread->runNow );
@@ -245,6 +244,7 @@ thread_run_wrapper( void* paramPtr ) {
             {
                 /* Spawn a Reporter thread with these settings */
                 reporter_spawn( thread );
+
             } break;
         case kMode_Listener:
             {
@@ -255,6 +255,11 @@ thread_run_wrapper( void* paramPtr ) {
                 // Decrement the non-terminating thread count
                 thread_unregister_nonterm();
             } break;
+        case kMode_SyncronizedReporter:
+			{
+				/* Spawn a synchronized reporter thread with these settings */
+				synchronized_reporter_spawn( thread );
+			} break;
         default:
             {
                 FAIL(1, "Unknown Thread Type!\n", thread);

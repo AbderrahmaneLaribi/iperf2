@@ -78,7 +78,8 @@ typedef enum ThreadMode {
     kMode_Server,
     kMode_Client,
     kMode_Reporter,
-    kMode_Listener
+    kMode_Listener,
+    kMode_SyncronizedReporter
 } ThreadMode;
 
 // report mode

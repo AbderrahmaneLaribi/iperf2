@@ -150,7 +150,6 @@ void Listener::Run( void ) {
         Settings_Copy( mSettings, &server );
         server->mThreadMode = kMode_Server;
     
-    
         // Accept each packet, 
         // If there is no existing client, then start  
         // a new thread to service the new client 

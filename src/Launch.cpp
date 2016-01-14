@@ -60,6 +60,7 @@
 #include "Listener.hpp"
 #include "Server.hpp"
 #include "PerfSocket.hpp"
+#include "SynchronizedReporter.hpp"
 
 /*
  * listener_spawn is responsible for creating a Listener class
@@ -91,6 +92,27 @@ void server_spawn( thread_Settings *thread) {
     // Run the test
     theServer->Run();
     DELETE_PTR( theServer);
+}
+
+/*
+ * synchronized_reporter_spawn is responsible for creating a
+ * singleton SynchronizedReporter class that prints reports
+ * in a synchronized manner
+ */
+void synchronized_reporter_spawn( thread_Settings *thread) {
+	// Get the instance
+	SynchronizedReporter* syncReporter = SynchronizedReporter::GetInstance();
+
+	// Set the settings
+	syncReporter->SetSettings( thread );
+	// Set the settings
+	syncReporter->SetConnectedThread( thread->runNext );
+
+	// Run the reporter
+	syncReporter->Run();
+
+	// Cleanup
+	SynchronizedReporter::Destroy(syncReporter);
 }
 
 /*

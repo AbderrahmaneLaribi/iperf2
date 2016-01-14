@@ -262,6 +262,7 @@ Transfer_Info* GetReport( ReportHeader *agent );
 void ReportServerUDP( struct thread_Settings *agent, struct server_hdr *server );
 void ReportSettings( struct thread_Settings *agent );
 void ReportConnections( struct thread_Settings *agent );
+int reporter_print( ReporterData *stats, int type, int end );
 
 extern report_connection connection_reports[];
 

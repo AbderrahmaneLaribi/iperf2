@@ -649,7 +649,6 @@ void process_report ( ReportHeader *report ) {
  */
 int reporter_process_report ( ReportHeader *reporthdr ) {
     int need_free = 0;
-
     // Recursively process reports
     if ( reporthdr->next != NULL ) {
         if ( reporter_process_report( reporthdr->next ) ) {

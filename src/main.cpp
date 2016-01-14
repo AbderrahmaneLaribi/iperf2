@@ -166,6 +166,19 @@ int main( int argc, char **argv ) {
     // read settings from command-line parameters
     Settings_ParseCommandLine( argc, argv, ext_gSettings );
 
+    // Synchronized reporter
+    {
+    	// TODO : add a flag from arguments
+    	thread_Settings *syncReporterThread = ext_gSettings;
+    	// Create the settings structure for the reporter thread
+    	Settings_Copy( ext_gSettings, &syncReporterThread );
+    	syncReporterThread->mTID = 0;
+    	syncReporterThread->runNext = ext_gSettings;
+    	syncReporterThread->mThreadMode = kMode_SyncronizedReporter;
+    	// Start all the threads that are ready to go
+    	thread_start( syncReporterThread );
+    }
+
     // Check for either having specified client or server
     if ( ext_gSettings->mThreadMode == kMode_Client 
          || ext_gSettings->mThreadMode == kMode_Listener ) {
@@ -220,6 +233,7 @@ int main( int argc, char **argv ) {
 #else
         // No need to make a reporter thread because we don't have threads
         thread_start( ext_gSettings );
+
 #endif
     } else {
         // neither server nor client mode was specified

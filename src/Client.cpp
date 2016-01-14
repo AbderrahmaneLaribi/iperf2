@@ -391,7 +391,6 @@ void Client::RunTCP( void ) {
 	    break;
 #endif	
     }
-		  
 
     // stop timing
     gettimeofday( &(reportstruct->packetTime), NULL );

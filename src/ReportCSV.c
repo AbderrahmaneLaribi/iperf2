@@ -61,12 +61,16 @@ void CSV_timestamp( char *timestamp, int length );
 void CSV_stats( Transfer_Info *stats ) {
     // $TIMESTAMP,$ID,$INTERVAL,$BYTE,$SPEED,$JITTER,$LOSS,$PACKET,$%LOSS
     max_size_t speed = (max_size_t)(((double)stats->TotalLen * 8.0) / (stats->endTime - stats->startTime));
-    char timestamp[16];
-    CSV_timestamp( timestamp, sizeof(timestamp) );
+
+    // UNIX timestamp
+    struct timespec time;
+    clock_gettime(CLOCK_REALTIME, &time);
+
     if ( stats->mUDP != (char)kMode_Server ) {
         // TCP Reporting
         printf( reportCSV_bw_format, 
-                timestamp, 
+        		(long long)(time.tv_sec),
+        		time.tv_nsec,
                 (stats->reserved_delay == NULL ? ",,," : stats->reserved_delay),
                 stats->transferID, 
                 stats->startTime, 
@@ -76,7 +80,8 @@ void CSV_stats( Transfer_Info *stats ) {
     } else {
         // UDP Reporting
         printf( reportCSV_bw_jitter_loss_format, 
-                timestamp, 
+        		(long long)(time.tv_sec),
+        		time.tv_nsec,
                 (stats->reserved_delay == NULL ? ",,," : stats->reserved_delay),
                 stats->transferID, 
                 stats->startTime, 
