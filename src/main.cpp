@@ -170,14 +170,14 @@ int main( int argc, char **argv ) {
 
     // Synchronized reporter
 
-    	// TODO : add a flag from arguments
-    	thread_Settings *syncReporterThread = ext_gSettings;
-    	// Create the settings structure for the reporter thread
-    	Settings_Copy( ext_gSettings, &syncReporterThread );
-    	syncReporterThread->mTID = 0;
-    	syncReporterThread->runNext = ext_gSettings;
-    	syncReporterThread->mThreadMode = kMode_SyncronizedReporter;
-    	thread_start( syncReporterThread );
+//    	// TODO : add a flag from arguments
+//    	thread_Settings *syncReporterThread = ext_gSettings;
+//    	// Create the settings structure for the reporter thread
+//    	Settings_Copy( ext_gSettings, &syncReporterThread );
+//    	syncReporterThread->mTID = 0;
+//    	syncReporterThread->runNext = ext_gSettings;
+//    	syncReporterThread->mThreadMode = kMode_SyncronizedReporter;
+//    	thread_start( syncReporterThread );
 
 
     // Check for either having specified client or server
@@ -220,6 +220,8 @@ int main( int argc, char **argv ) {
 #ifdef HAVE_THREAD
         // start up the reporter and client(s) or listener
         {
+        	//synchronize();
+
             thread_Settings *into = NULL;
             // Create the settings structure for the reporter thread
             Settings_Copy( ext_gSettings, &into );

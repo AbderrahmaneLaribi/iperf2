@@ -8,6 +8,8 @@
 #include "Reporter.h"
 #include "Locale.h"
 
+
+
 // Definition
 SynchronizedReporter* SynchronizedReporter::mInstance = NULL;
 

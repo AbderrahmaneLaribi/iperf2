@@ -368,7 +368,7 @@ void Client::RunTCP( void ) {
 #ifdef HAVE_SETITIMER
     	    gettimeofday( &(reportstruct->packetTime), NULL );
 #endif
-            reportstruct->packetLen = currLen;
+    	    reportstruct->packetLen = currLen;
             ReportPacket( mSettings->reporthdr, reportstruct );
         }	
 
@@ -607,7 +607,6 @@ void Client::Run( void ) {
 	        break;
 	    }
 	}
-
         // report packets 
         reportstruct->packetLen = (unsigned long) currLen;
         ReportPacket( mSettings->reporthdr, reportstruct );

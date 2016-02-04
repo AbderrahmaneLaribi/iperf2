@@ -62,6 +62,19 @@
 extern "C" {
 #endif
 
+
+// Synchronization method
+// Used to make sure all reports are given at the beginning of a new second
+void synchronize(){
+	struct timespec realTime;
+	clock_gettime(CLOCK_REALTIME, &realTime);
+	realTime.tv_sec = 0;
+	realTime.tv_nsec = 999999999 - realTime.tv_nsec;
+	struct timespec* remainTime = malloc(sizeof(struct timespec));
+	const struct timespec* sleepDuration = &realTime;
+	nanosleep(sleepDuration, remainTime);
+}
+
 /*
   The following 4 functions are provided for Reporting
   styles that do not have all the reporting formats. For
@@ -587,7 +600,7 @@ void ReportServerUDP( thread_Settings *agent, server_hdr *server ) {
  * This function is the loop that the reporter thread processes
  */
 void reporter_spawn( thread_Settings *thread ) {
-    do {
+	do {
         // This section allows for safe exiting with Ctrl-C
         Condition_Lock ( ReportCond );
         if ( ReportRoot == NULL ) {
@@ -603,6 +616,7 @@ again:
         if ( ReportRoot != NULL ) {
             ReportHeader *temp = ReportRoot;
             //Condition_Unlock ( ReportCond );
+            synchronize();
             if ( reporter_process_report ( temp ) ) {
                 // This section allows for more reports to be added while
                 // the reporter is processing reports without needing to

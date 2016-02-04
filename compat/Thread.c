@@ -90,7 +90,6 @@ int nonterminating_num = 0;
 // changes to above
 Condition thread_sNum_cond;
 
-
 /* -------------------------------------------------------------------
  * Initialize the thread subsystems variables and set the concurrency
  * level in solaris.
