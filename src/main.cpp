@@ -99,6 +99,16 @@ extern "C" {
     Condition ReportDoneCond;
 }
 
+void synchronize(){
+	struct timespec realTime;
+	clock_gettime(CLOCK_REALTIME, &realTime);
+	realTime.tv_sec = 0;
+	realTime.tv_nsec = 999999999 - realTime.tv_nsec;
+	struct timespec* remainTime = new struct timespec;
+	const struct timespec* sleepDuration = &realTime;
+	nanosleep(sleepDuration, remainTime);
+}
+
 thread_Settings* thread;
 
 // global variables only accessed within this file
@@ -168,17 +178,6 @@ int main( int argc, char **argv ) {
     // read settings from command-line parameters
     Settings_ParseCommandLine( argc, argv, ext_gSettings );
 
-    // Synchronized reporter
-
-//    	// TODO : add a flag from arguments
-//    	thread_Settings *syncReporterThread = ext_gSettings;
-//    	// Create the settings structure for the reporter thread
-//    	Settings_Copy( ext_gSettings, &syncReporterThread );
-//    	syncReporterThread->mTID = 0;
-//    	syncReporterThread->runNext = ext_gSettings;
-//    	syncReporterThread->mThreadMode = kMode_SyncronizedReporter;
-//    	thread_start( syncReporterThread );
-
 
     // Check for either having specified client or server
     if ( ext_gSettings->mThreadMode == kMode_Client 
@@ -220,7 +219,7 @@ int main( int argc, char **argv ) {
 #ifdef HAVE_THREAD
         // start up the reporter and client(s) or listener
         {
-        	//synchronize();
+        	synchronize();
 
             thread_Settings *into = NULL;
             // Create the settings structure for the reporter thread

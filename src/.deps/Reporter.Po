@@ -85,7 +85,8 @@ Reporter.o: Reporter.c /usr/include/stdc-predef.h ../include/headers.h \
  ../include/Settings.hpp ../include/Reporter.h ../include/util.h \
  ../include/Reporter.h ../include/Thread.h ../include/Locale.h \
  ../include/PerfSocket.hpp ../include/SocketAddr.h \
- ../include/report_default.h ../include/report_CSV.h
+ /usr/include/inttypes.h ../include/report_default.h \
+ ../include/report_CSV.h
 
 /usr/include/stdc-predef.h:
 
@@ -338,6 +339,8 @@ Reporter.o: Reporter.c /usr/include/stdc-predef.h ../include/headers.h \
 ../include/PerfSocket.hpp:
 
 ../include/SocketAddr.h:
+
+/usr/include/inttypes.h:
 
 ../include/report_default.h:
 

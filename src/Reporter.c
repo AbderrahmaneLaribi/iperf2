@@ -57,6 +57,7 @@
 #include "Locale.h"
 #include "PerfSocket.hpp"
 #include "SocketAddr.h"
+#include <inttypes.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -707,7 +708,7 @@ int reporter_process_report ( ReportHeader *reporthdr ) {
                 }
                 if ( reporter_handle_packet( reporthdr ) ) {
                     // No more packets to process
-                    reporthdr->reporterindex = -1;
+                	//reporthdr->reporterindex = -1;
                     break;
                 }
             }
@@ -975,7 +976,7 @@ static void gettcpistats (ReporterData *stats) {
  */
 int reporter_condprintstats( ReporterData *stats, MultiHeader *multireport, int force ) {
 
-    if ( force ) {
+	if ( force ) {
 #ifdef HAVE_STRUCT_TCP_INFO_TCPI_TOTAL_RETRANS
 	gettcpistats(stats);
 #endif
@@ -1020,8 +1021,8 @@ int reporter_condprintstats( ReporterData *stats, MultiHeader *multireport, int 
         if ( isMultipleReport(stats) ) {
             reporter_handle_multiple_reports( multireport, &stats->info, force );
         }
-    } else while ((stats->intervalTime.tv_sec != 0 || 
-                   stats->intervalTime.tv_usec != 0) && 
+    } else while ((stats->intervalTime.tv_sec != 0 ||
+                   stats->intervalTime.tv_usec != 0) &&
                   TimeDifference( stats->nextTime, 
                                   stats->packetTime ) < 0 ) {
 #ifdef HAVE_STRUCT_TCP_INFO_TCPI_TOTAL_RETRANS

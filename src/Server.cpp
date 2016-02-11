@@ -182,25 +182,25 @@ void Server::Run( void ) {
             currLen = recvmsg( mSettings->mSock, &message, 0 );
 	    if (currLen <= 0) {
 		// Socket read timeout or read error
-		reportstruct->emptyreport=1;
+		//reportstruct->emptyreport=1;
 		gettimeofday( &(reportstruct->packetTime), NULL );
                 // End loop on 0 read or socket error
 		// except for socket read timeout
-		if (currLen == 0 || (TimeDifference(reportstruct->packetTime, watchdog) > (mSettings->mAmount / 100)) ||
+		if (/*currLen == 0 || */(TimeDifference(reportstruct->packetTime, watchdog) > (mSettings->mAmount / 100)) ||
 #ifdef WIN32
 		    (WSAGetLastError() != WSAEWOULDBLOCK)
 #else
 		    (errno != EAGAIN && errno != EWOULDBLOCK)
 #endif		     
 		    ) {
-		    running = 0;
+		    //running = 0;
 		}
 		currLen=0;
 	    }
 
             if (!reportstruct->emptyreport && isUDP( mSettings ) ) {
-                // read the datagram ID and sentTime out of the buffer 
-                reportstruct->packetID = ntohl( mBuf_UDP->id ); 
+                // read the datagram ID and sentTime out of the buffer
+                reportstruct->packetID = ntohl( mBuf_UDP->id );
                 reportstruct->sentTime.tv_sec = ntohl( mBuf_UDP->tv_sec  );
                 reportstruct->sentTime.tv_usec = ntohl( mBuf_UDP->tv_usec ); 
 		reportstruct->packetLen = currLen;
@@ -248,7 +248,7 @@ void Server::Run( void ) {
             if ( reportstruct->packetID < 0 ) {
                 reportstruct->packetID = -reportstruct->packetID;
                 currLen = -1;
-		running = 0; 
+		running = 0;
             }
 
 	    if ( isUDP (mSettings)) {
@@ -256,11 +256,13 @@ void Server::Run( void ) {
             } else {
 		// TCP case
                 reportstruct->packetLen = currLen;
+                //if (currLen <= 0)
+                	//reportstruct->packetID = -1;
                 gettimeofday( &(reportstruct->packetTime), NULL );
                 ReportPacket( mSettings->reporthdr, reportstruct );
             }
         } while (running); 
-                
+
         // stop timing 
         gettimeofday( &(reportstruct->packetTime), NULL );
         
