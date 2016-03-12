@@ -149,7 +149,7 @@ void Listener::Run( void ) {
         }
         Settings_Copy( mSettings, &server );
         server->mThreadMode = kMode_Server;
-    
+
         // Accept each packet, 
         // If there is no existing client, then start  
         // a new thread to service the new client 
@@ -202,7 +202,7 @@ sInterupted == SIGALRM
                     continue;
                 }
             }
-    
+
             // Create an entry for the connection list
             listtemp = new Iperf_ListEntry;
             memcpy(listtemp, &server->peer, sizeof(iperf_sockaddr));
@@ -347,10 +347,10 @@ void Listener::Listen( ) {
     }
     // listen for connections (TCP only).
     // default backlog traditionally 5
-    if ( !isUDP( mSettings ) ) {
+    //if ( !isUDP( mSettings ) ) {
         rc = listen( mSettings->mSock, 5 );
         WARN_errno( rc == SOCKET_ERROR, "listen" );
-    }
+    //}
 
 #ifndef WIN32
     // if multicast, join the group
@@ -458,7 +458,7 @@ void Listener::Accept( thread_Settings *server ) {
     } else {
         // Handles interupted accepts. Returns the newly connected socket.
         server->mSock = INVALID_SOCKET;
-    
+
         while ( server->mSock == INVALID_SOCKET ) {
             // accept a connection
             server->mSock = accept( mSettings->mSock, 

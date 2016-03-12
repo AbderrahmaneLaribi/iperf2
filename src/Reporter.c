@@ -57,24 +57,10 @@
 #include "Locale.h"
 #include "PerfSocket.hpp"
 #include "SocketAddr.h"
-#include <inttypes.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-
-// Synchronization method
-// Used to make sure all reports are given at the beginning of a new second
-void synchronize(){
-	struct timespec realTime;
-	clock_gettime(CLOCK_REALTIME, &realTime);
-	realTime.tv_sec = 0;
-	realTime.tv_nsec = 999999999 - realTime.tv_nsec;
-	struct timespec* remainTime = malloc(sizeof(struct timespec));
-	const struct timespec* sleepDuration = &realTime;
-	nanosleep(sleepDuration, remainTime);
-}
 
 /*
   The following 4 functions are provided for Reporting
@@ -251,7 +237,7 @@ ReportHeader* InitReport( thread_Settings *agent ) {
             data = &reporthdr->report;
             reporthdr->reporterindex = NUM_REPORT_STRUCTS - 1;
             data->info.transferID = agent->mSock;
-            data->info.groupID = (agent->multihdr != NULL ? agent->multihdr->groupID : -1);
+            data->info.groupID = (agent->multihdr != NULL ? agent->multihdr->groupID : 128);
             data->type = TRANSFER_REPORT;
             if ( agent->mInterval != 0.0 ) {
                 struct timeval *interval = &data->intervalTime;
@@ -296,7 +282,7 @@ ReportHeader* InitReport( thread_Settings *agent ) {
                 memset( reporthdr, 0, sizeof(ReportHeader));
                 data = &reporthdr->report;
                 data->info.transferID = agent->mSock;
-                data->info.groupID = -1;
+                data->info.groupID = 128;
             } else {
                 FAIL(1, "Out of Memory!!\n", agent);
             }
@@ -395,7 +381,6 @@ void ReportPacket( ReportHeader* agent, ReportStruct *packet ) {
         
         // Updating agentindex MUST be the last thing done
         agent->agentindex++;
-
 #ifndef HAVE_THREAD
         /*
          * Process the report in this thread
@@ -470,7 +455,7 @@ void ReportSettings( thread_Settings *agent ) {
          * Create in one big chunk
          */
         ReportHeader *reporthdr = malloc( sizeof(ReportHeader) );
-    
+
         if ( reporthdr != NULL ) {
             ReporterData *data = &reporthdr->report;
             data->info.transferID = agent->mSock;
@@ -535,7 +520,7 @@ void ReportServerUDP( thread_Settings *agent, server_hdr *server ) {
         if ( reporthdr != NULL ) {
             stats->transferID = agent->mSock;
             stats->groupID = (agent->multihdr != NULL ? agent->multihdr->groupID 
-                                                      : -1);
+                                                      : 128);
             reporthdr->agentindex = -1;
             reporthdr->reporterindex = -1;
 
@@ -601,7 +586,7 @@ void ReportServerUDP( thread_Settings *agent, server_hdr *server ) {
  * This function is the loop that the reporter thread processes
  */
 void reporter_spawn( thread_Settings *thread ) {
-	do {
+    do {
         // This section allows for safe exiting with Ctrl-C
         Condition_Lock ( ReportCond );
         if ( ReportRoot == NULL ) {
@@ -617,7 +602,10 @@ again:
         if ( ReportRoot != NULL ) {
             ReportHeader *temp = ReportRoot;
             //Condition_Unlock ( ReportCond );
-            synchronize();
+            if(temp->report.mThreadMode == kMode_Client){
+            	if (synchronize() == 0)
+            		goto again;
+            }
             if ( reporter_process_report ( temp ) ) {
                 // This section allows for more reports to be added while
                 // the reporter is processing reports without needing to
@@ -665,6 +653,7 @@ void process_report ( ReportHeader *report ) {
  */
 int reporter_process_report ( ReportHeader *reporthdr ) {
     int need_free = 0;
+
     // Recursively process reports
     if ( reporthdr->next != NULL ) {
         if ( reporter_process_report( reporthdr->next ) ) {
@@ -674,6 +663,7 @@ int reporter_process_report ( ReportHeader *reporthdr ) {
             free( temp );
         }
     }
+
     if ( (reporthdr->report.type & SETTINGS_REPORT) != 0 ) {
         reporthdr->report.type &= ~SETTINGS_REPORT;
         return reporter_print( &reporthdr->report, SETTINGS_REPORT, 1 );
@@ -708,7 +698,7 @@ int reporter_process_report ( ReportHeader *reporthdr ) {
                 }
                 if ( reporter_handle_packet( reporthdr ) ) {
                     // No more packets to process
-                	//reporthdr->reporterindex = -1;
+                    //reporthdr->reporterindex = -1;
                     break;
                 }
             }
@@ -976,7 +966,7 @@ static void gettcpistats (ReporterData *stats) {
  */
 int reporter_condprintstats( ReporterData *stats, MultiHeader *multireport, int force ) {
 
-	if ( force ) {
+    if ( force ) {
 #ifdef HAVE_STRUCT_TCP_INFO_TCPI_TOTAL_RETRANS
 	gettcpistats(stats);
 #endif
@@ -1017,6 +1007,7 @@ int reporter_condprintstats( ReporterData *stats, MultiHeader *multireport, int 
 	}
 	stats->info.IPGsum = 1;
         stats->info.free = 1;
+
         reporter_print( stats, TRANSFER_REPORT, force );
         if ( isMultipleReport(stats) ) {
             reporter_handle_multiple_reports( multireport, &stats->info, force );

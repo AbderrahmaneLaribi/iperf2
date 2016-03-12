@@ -182,18 +182,18 @@ void Server::Run( void ) {
             currLen = recvmsg( mSettings->mSock, &message, 0 );
 	    if (currLen <= 0) {
 		// Socket read timeout or read error
-		//reportstruct->emptyreport=1;
+		reportstruct->emptyreport=1;
 		gettimeofday( &(reportstruct->packetTime), NULL );
                 // End loop on 0 read or socket error
 		// except for socket read timeout
-		if (/*currLen == 0 || */(TimeDifference(reportstruct->packetTime, watchdog) > (mSettings->mAmount / 100)) ||
+		if (currLen == 0 || (TimeDifference(reportstruct->packetTime, watchdog) > (mSettings->mAmount / 100)) ||
 #ifdef WIN32
 		    (WSAGetLastError() != WSAEWOULDBLOCK)
 #else
 		    (errno != EAGAIN && errno != EWOULDBLOCK)
 #endif		     
 		    ) {
-		    //running = 0;
+		    running = 0;
 		}
 		currLen=0;
 	    }
@@ -256,8 +256,6 @@ void Server::Run( void ) {
             } else {
 		// TCP case
                 reportstruct->packetLen = currLen;
-                //if (currLen <= 0)
-                	//reportstruct->packetID = -1;
                 gettimeofday( &(reportstruct->packetTime), NULL );
                 ReportPacket( mSettings->reporthdr, reportstruct );
             }
@@ -377,5 +375,4 @@ void Server::write_UDP_AckFIN( ) {
 
     fprintf( stderr, warn_ack_failed, mSettings->mSock, count ); 
 } 
-// end write_UDP_AckFIN 
-
+// end write_UDP_AckFIN

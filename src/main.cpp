@@ -97,16 +97,27 @@ extern "C" {
     // serialize modification of the report list
     Condition ReportCond;
     Condition ReportDoneCond;
-}
 
-void synchronize(){
-	struct timespec realTime;
-	clock_gettime(CLOCK_REALTIME, &realTime);
-	realTime.tv_sec = 0;
-	realTime.tv_nsec = 999999999 - realTime.tv_nsec;
-	struct timespec* remainTime = new struct timespec;
-	const struct timespec* sleepDuration = &realTime;
-	nanosleep(sleepDuration, remainTime);
+    // Synchronization method
+    // Used to make sure all reports are given at the beginning of a new second
+    int synchronize(){
+    	struct timespec realTime;
+    	clock_gettime(CLOCK_REALTIME, &realTime);
+    	if (realTime.tv_nsec > 10000)
+    		return 0;
+    	else
+    		return 1;
+    }
+
+//    void initSynchronization(){
+//    	struct timespec realTime;
+//    	clock_gettime(CLOCK_REALTIME, &realTime);
+//		realTime.tv_sec = 0;
+//		realTime.tv_nsec = 999999999 - realTime.tv_nsec;
+//		struct timespec* remainTime = (struct timespec*)(malloc(sizeof(struct timespec)));
+//		const struct timespec* sleepDuration = &realTime;
+//		nanosleep(sleepDuration, remainTime);
+//    }
 }
 
 thread_Settings* thread;
@@ -178,7 +189,6 @@ int main( int argc, char **argv ) {
     // read settings from command-line parameters
     Settings_ParseCommandLine( argc, argv, ext_gSettings );
 
-
     // Check for either having specified client or server
     if ( ext_gSettings->mThreadMode == kMode_Client 
          || ext_gSettings->mThreadMode == kMode_Listener ) {
@@ -219,8 +229,6 @@ int main( int argc, char **argv ) {
 #ifdef HAVE_THREAD
         // start up the reporter and client(s) or listener
         {
-        	synchronize();
-
             thread_Settings *into = NULL;
             // Create the settings structure for the reporter thread
             Settings_Copy( ext_gSettings, &into );
@@ -231,7 +239,6 @@ int main( int argc, char **argv ) {
 
             // Start all the threads that are ready to go
             thread_start( into );
-            //thread_start( ext_gSettings );
         }
 #else
         // No need to make a reporter thread because we don't have threads
