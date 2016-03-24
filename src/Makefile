@@ -105,7 +105,7 @@ am_iperf_OBJECTS = Client.$(OBJEXT) Extractor.$(OBJEXT) \
 	ReportDefault.$(OBJEXT) Reporter.$(OBJEXT) Server.$(OBJEXT) \
 	Settings.$(OBJEXT) SocketAddr.$(OBJEXT) gnu_getopt.$(OBJEXT) \
 	gnu_getopt_long.$(OBJEXT) main.$(OBJEXT) service.$(OBJEXT) \
-	sockets.$(OBJEXT) stdio.$(OBJEXT) tcp_window_size.$(OBJEXT)	SynchronizedReporter.$(OBJEXT) 
+	sockets.$(OBJEXT) stdio.$(OBJEXT) tcp_window_size.$(OBJEXT)
 iperf_OBJECTS = $(am_iperf_OBJECTS)
 iperf_DEPENDENCIES = $(am__DEPENDENCIES_1)
 iperf_LINK = $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(iperf_LDFLAGS) \
@@ -321,9 +321,8 @@ iperf_SOURCES = \
 		service.c \
 		sockets.c \
 		stdio.c \
-		tcp_window_size.c \
-		SynchronizedReporter.cpp
-	
+		tcp_window_size.c
+
 iperf_LDADD = $(LIBCOMPAT_LDADDS)
 checkdelay_SOURCES = checkdelay.cpp
 checkdelay_LDADD = $(LIBCOMPAT_LDADDS)

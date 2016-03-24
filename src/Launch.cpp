@@ -123,19 +123,19 @@ void server_spawn( thread_Settings *thread) {
  * in a synchronized manner
  */
 void synchronized_reporter_spawn( thread_Settings *thread) {
-	// Get the instance
-	SynchronizedReporter* syncReporter = SynchronizedReporter::GetInstance();
-
-	// Set the settings
-	syncReporter->SetSettings( thread );
-	// Set the connected thread (server or client to report)
-	syncReporter->SetConnectedThread( thread->runNext );
-
-	// Run the reporter
-	syncReporter->Run();
-
-	// Cleanup
-	SynchronizedReporter::Destroy(syncReporter);
+//	// Get the instance
+//	SynchronizedReporter* syncReporter = SynchronizedReporter::GetInstance();
+//
+//	// Set the settings
+//	syncReporter->SetSettings( thread );
+//	// Set the connected thread (server or client to report)
+//	syncReporter->SetConnectedThread( thread->runNext );
+//
+//	// Run the reporter
+//	syncReporter->Run();
+//
+//	// Cleanup
+//	SynchronizedReporter::Destroy(syncReporter);
 }
 
 /*

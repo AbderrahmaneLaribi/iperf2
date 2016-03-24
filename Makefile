@@ -202,12 +202,12 @@ AUTOMAKE = ${SHELL} /home/laribi/Documents/repo/iperf2/missing automake-1.13
 AWK = mawk
 CC = gcc
 CCDEPMODE = depmode=gcc3
-CFLAGS = -ggdb # -O2 
+CFLAGS =  -O2 
 CPP = gcc -E
 CPPFLAGS = 
 CXX = g++
 CXXDEPMODE = depmode=gcc3
-CXXFLAGS = -ggdb # -O2 
+CXXFLAGS =  -O2 
 CYGPATH_W = echo
 DEFS = -DHAVE_CONFIG_H
 DEPDIR = .deps
