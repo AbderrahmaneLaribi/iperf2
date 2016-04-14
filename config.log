@@ -227,7 +227,7 @@ conftest.c:18:22: warning: null argument where non-null required (argument 1) [-
                       pthread_create(0,0,0,0); pthread_cleanup_pop(0);
                       ^
 conftest.c:18:22: warning: null argument where non-null required (argument 3) [-Wnonnull]
-/tmp/cc8X882h.o: In function `main':
+/tmp/ccgap6L6.o: In function `main':
 conftest.c:(.text.startup+0x9): undefined reference to `pthread_join'
 conftest.c:(.text.startup+0x26): undefined reference to `__pthread_register_cancel'
 conftest.c:(.text.startup+0x33): undefined reference to `pthread_create'
@@ -1106,7 +1106,7 @@ configure:7091: $? = 0
 configure:7091: result: yes
 configure:7097: checking for _doprnt
 configure:7097: gcc -o conftest  -O2    conftest.c -lrt  >&5
-/tmp/cc6WiBMO.o: In function `main':
+/tmp/ccB95Sls.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `_doprnt'
 collect2: error: ld returned 1 exit status
 configure:7097: $? = 1
@@ -1214,7 +1214,7 @@ configure:7111: $? = 0
 configure:7111: result: yes
 configure:7111: checking for pthread_cancel
 configure:7111: gcc -o conftest  -O2    conftest.c -lrt  >&5
-/tmp/ccnjgZ1V.o: In function `main':
+/tmp/cczVoQEC.o: In function `main':
 conftest.c:(.text.startup+0x7): undefined reference to `pthread_cancel'
 collect2: error: ld returned 1 exit status
 configure:7111: $? = 1

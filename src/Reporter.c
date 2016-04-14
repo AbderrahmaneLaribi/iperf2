@@ -603,8 +603,7 @@ again:
             ReportHeader *temp = ReportRoot;
             //Condition_Unlock ( ReportCond );
             if(temp->report.mThreadMode == kMode_Client){
-            	if (synchronize() == 0)
-            		goto again;
+            	synchronize();
             }
             if ( reporter_process_report ( temp ) ) {
                 // This section allows for more reports to be added while

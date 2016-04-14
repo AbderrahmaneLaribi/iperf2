@@ -72,19 +72,6 @@ void initSynchronization(){
 	nanosleep(sleepDuration, remainTime);
 }
 
-// Generates group IDs for SUM reports
-int generateGroupID(thread_Settings* settings){
-	int groupID = 0;
-	char* host = (char*)malloc(strlen(settings->mHost) + 1);
-	strcpy(host,settings->mHost);
-	char* token = strtok(host,".");
-	while(token != NULL){
-		groupID += atoi(token);
-		token = strtok(NULL,".");
-	}
-	return groupID;
-}
-
 /*
  * listener_spawn is responsible for creating a Listener class
  * and launching the listener. It is provided as a means for

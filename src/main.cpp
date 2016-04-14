@@ -103,21 +103,12 @@ extern "C" {
     int synchronize(){
     	struct timespec realTime;
     	clock_gettime(CLOCK_REALTIME, &realTime);
-    	if (realTime.tv_nsec > 10000)
-    		return 0;
-    	else
-    		return 1;
+    	realTime.tv_sec = 0;
+    	realTime.tv_nsec = 999999999 - realTime.tv_nsec;
+    	struct timespec* remainTime = (struct timespec*)(malloc(sizeof(struct timespec)));
+    	const struct timespec* sleepDuration = &realTime;
+    	nanosleep(sleepDuration, remainTime);
     }
-
-//    void initSynchronization(){
-//    	struct timespec realTime;
-//    	clock_gettime(CLOCK_REALTIME, &realTime);
-//		realTime.tv_sec = 0;
-//		realTime.tv_nsec = 999999999 - realTime.tv_nsec;
-//		struct timespec* remainTime = (struct timespec*)(malloc(sizeof(struct timespec)));
-//		const struct timespec* sleepDuration = &realTime;
-//		nanosleep(sleepDuration, remainTime);
-//    }
 }
 
 thread_Settings* thread;
